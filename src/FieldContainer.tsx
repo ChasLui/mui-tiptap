@@ -1,10 +1,12 @@
+import { Box, type BoxProps } from "@mui/material";
 import type React from "react";
 import { makeStyles } from "tss-react/mui";
+import type { Except } from "type-fest";
 import { Z_INDEXES, getUtilityClasses } from "./styles";
 
 export type FieldContainerClasses = ReturnType<typeof useStyles>["classes"];
 
-export type FieldContainerProps = {
+export type FieldContainerProps = Except<BoxProps, "children"> & {
   /**
    * Which style to use for the field. "outlined" shows a border around the children,
    * which updates its appearance depending on hover/focus states, like MUI's
@@ -23,7 +25,7 @@ export type FieldContainerProps = {
 
 const fieldContainerClasses: FieldContainerClasses = getUtilityClasses(
   "FieldContainer",
-  ["root", "outlined", "standard", "focused", "disabled", "notchedOutline"]
+  ["root", "outlined", "standard", "focused", "disabled", "notchedOutline"],
 );
 
 // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
@@ -100,13 +102,15 @@ export default function FieldContainer({
   disabled,
   classes: overrideClasses = {},
   className,
+  ...boxProps
 }: FieldContainerProps) {
   const { classes, cx } = useStyles(undefined, {
     props: { classes: overrideClasses },
   });
 
   return (
-    <div
+    <Box
+      {...boxProps}
       className={cx(
         fieldContainerClasses.root,
         classes.root,
@@ -118,7 +122,7 @@ export default function FieldContainer({
         // in this order
         focused && [fieldContainerClasses.focused, classes.focused],
         disabled && [fieldContainerClasses.disabled, classes.disabled],
-        className
+        className,
       )}
     >
       {children}
@@ -127,11 +131,11 @@ export default function FieldContainer({
         <div
           className={cx(
             fieldContainerClasses.notchedOutline,
-            classes.notchedOutline
+            classes.notchedOutline,
           )}
           aria-hidden
         />
       )}
-    </div>
+    </Box>
   );
 }

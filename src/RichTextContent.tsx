@@ -1,14 +1,18 @@
-import { Box } from "@mui/material";
+import { Box, type BoxProps } from "@mui/material";
 import { EditorContent } from "@tiptap/react";
 import { useMemo } from "react";
 import type { CSSObject } from "tss-react";
 import { makeStyles } from "tss-react/mui";
+import type { Except } from "type-fest";
 import { useRichTextEditorContext } from "./context";
 import { getEditorStyles, getUtilityClasses } from "./styles";
 
 export type RichTextContentClasses = ReturnType<typeof useStyles>["classes"];
 
-export type RichTextContentProps = {
+export type RichTextContentProps = Except<
+  BoxProps,
+  "children" | "component"
+> & {
   /** Optional additional className to provide to the root element. */
   className?: string;
   /** Override or extend existing styles. */
@@ -17,7 +21,7 @@ export type RichTextContentProps = {
 
 const richTextContentClasses: RichTextContentClasses = getUtilityClasses(
   "RichTextContent",
-  ["root", "readonly", "editable"]
+  ["root", "readonly", "editable"],
 );
 
 const useStyles = makeStyles({ name: { RichTextContent } })((theme) => {
@@ -51,6 +55,7 @@ const useStyles = makeStyles({ name: { RichTextContent } })((theme) => {
 export default function RichTextContent({
   className,
   classes: overrideClasses = {},
+  ...boxProps
 }: RichTextContentProps) {
   const { classes, cx } = useStyles(undefined, {
     props: { classes: overrideClasses },
@@ -64,12 +69,17 @@ export default function RichTextContent({
         classes.root,
         editor?.isEditable
           ? [richTextContentClasses.editable, classes.editable]
-          : [richTextContentClasses.readonly, classes.readonly]
+          : [richTextContentClasses.readonly, classes.readonly],
       ),
-    [className, classes, cx, editor?.isEditable]
+    [className, classes, cx, editor?.isEditable],
   );
 
   return (
-    <Box className={editorClasses} component={EditorContent} editor={editor} />
+    <Box
+      {...boxProps}
+      className={editorClasses}
+      component={EditorContent}
+      editor={editor}
+    />
   );
 }

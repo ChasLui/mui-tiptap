@@ -5,6 +5,62 @@ updates:
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     ignore:
+      - dependency-name: "@emotion/*"
+        update-types: ["version-update:semver-patch"]
+
+      - dependency-name: "@mui/*"
+        update-types: ["version-update:semver-patch"]
+
       - dependency-name: "@tiptap/*"
+
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+
+      - dependency-name: "@types/react"
+        update-types: ["version-update:semver-major"]
+
+      - dependency-name: "@types/react-dom"
+        update-types: ["version-update:semver-major"]
+
+      - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
+
+      - dependency-name: "react-dom"
+        update-types: ["version-update:semver-major"]
+
+      - dependency-name: "prosemirror-*"
+
+      # Newer versions of type-fest would require a newer TS version than MUI's
+      # minimum TS version.
+      - dependency-name: "type-fest"
+        update-types: ["version-update:semver-major"]
+
+      - dependency-name: "y-*"
+
+      - dependency-name: "yjs"
+
+    groups:
+      emotion:
+        patterns:
+          - "@emotion/*"
+      eslint:
+        patterns:
+          - "@eslint*"
+          - "eslint*"
+          - "typescript-eslint"
+      mui:
+        patterns:
+          - "@mui/*"
+      react:
+        patterns:
+          - "@types/react"
+          - "@types/react-dom"
+          - "react"
+          - "react-dom"
+      vite:
+        patterns:
+          - "@vitejs/*"
+          - "@vitest/*"
+          - "vite*"

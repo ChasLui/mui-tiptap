@@ -1,5 +1,8 @@
 name: build-test
 
+permissions:
+  contents: read
+
 # Run this for pushes to the main branch and for pull requests, and allow this
 # to be called from other workflows
 on:
@@ -83,6 +86,7 @@ jobs:
 
           git fetch origin tag v1.16.0 --no-tags
           git restore --source v1.16.0 src/demo/SuggestionList.tsx
+          pnpm exec prettier --write src/demo/SuggestionList.tsx
 
       - name: Build
         run: pnpm run build

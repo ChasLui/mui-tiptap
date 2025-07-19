@@ -1,5 +1,6 @@
 import { makeStyles } from "tss-react/mui";
-import FieldContainer from "./FieldContainer";
+import type { Except } from "type-fest";
+import FieldContainer, { type FieldContainerProps } from "./FieldContainer";
 import MenuBar, { type MenuBarProps } from "./MenuBar";
 import RichTextContent, { type RichTextContentProps } from "./RichTextContent";
 import { useRichTextEditorContext } from "./context";
@@ -9,7 +10,10 @@ import DebounceRender from "./utils/DebounceRender";
 
 export type RichTextFieldClasses = ReturnType<typeof useStyles>["classes"];
 
-export type RichTextFieldProps = {
+export type RichTextFieldProps = Except<
+  FieldContainerProps,
+  "children" | "className" | "classes" | "focused" | "disabled"
+> & {
   /**
    * Which style to use for the field. "outlined" shows a border around the controls,
    * editor, and footer, which updates depending on hover/focus states, like MUI's
@@ -61,7 +65,7 @@ export type RichTextFieldProps = {
 
 const richTextFieldClasses: RichTextFieldClasses = getUtilityClasses(
   "RichTextField",
-  ["root", "standard", "outlined", "menuBar", "menuBarContent", "content"]
+  ["root", "standard", "outlined", "menuBar", "menuBarContent", "content"],
 );
 
 // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
@@ -122,6 +126,7 @@ export default function RichTextField({
   footer,
   MenuBarProps,
   RichTextContentProps,
+  ...fieldContainerProps
 }: RichTextFieldProps) {
   const { classes, cx } = useStyles(undefined, {
     props: { classes: overrideClasses },
@@ -135,6 +140,7 @@ export default function RichTextField({
 
   return (
     <FieldContainer
+      {...fieldContainerProps}
       variant={variant}
       focused={!disabled && isFieldFocused}
       disabled={disabled}
@@ -144,7 +150,7 @@ export default function RichTextField({
         variant === "outlined"
           ? [richTextFieldClasses.outlined, classes.outlined]
           : [richTextFieldClasses.standard, classes.standard],
-        className
+        className,
       )}
     >
       {controls && (
@@ -155,12 +161,12 @@ export default function RichTextField({
             root: cx(
               richTextFieldClasses.menuBar,
               classes.menuBar,
-              MenuBarProps?.classes?.root
+              MenuBarProps?.classes?.root,
             ),
             content: cx(
               richTextFieldClasses.content,
               classes.menuBarContent,
-              MenuBarProps?.classes?.content
+              MenuBarProps?.classes?.content,
             ),
           }}
         >
@@ -177,7 +183,7 @@ export default function RichTextField({
         className={cx(
           richTextFieldClasses.content,
           classes.content,
-          RichTextContentProps?.className
+          RichTextContentProps?.className,
         )}
       />
 
